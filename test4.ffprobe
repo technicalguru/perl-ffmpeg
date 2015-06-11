@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ffprobe>
+    <streams>
+        <stream index="0" codec_name="h264" codec_long_name="H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10" profile="Main" codec_type="video" codec_time_base="1/50" codec_tag_string="avc1" codec_tag="0x31637661" width="720" height="406" has_b_frames="1" sample_aspect_ratio="406:405" display_aspect_ratio="16:9" pix_fmt="yuv420p" level="41" chroma_location="left" refs="2" is_avc="1" nal_length_size="4" r_frame_rate="25/1" avg_frame_rate="25/1" time_base="1/12800" start_pts="-10752" start_time="-0.840000" duration_ts="75264" duration="5.880000" bit_rate="4174417" bits_per_raw_sample="8" nb_frames="147">
+            <disposition default="1" dub="0" original="0" comment="0" lyrics="0" karaoke="0" forced="0" hearing_impaired="0" visual_impaired="0" clean_effects="0" attached_pic="0"/>
+            <tag key="language" value="und"/>
+            <tag key="handler_name" value="VideoHandler"/>
+        </stream>
+        <stream index="1" codec_name="ac3" codec_long_name="ATSC A/52A (AC-3)" codec_type="audio" codec_time_base="1/48000" codec_tag_string="ac-3" codec_tag="0x332d6361" sample_fmt="fltp" sample_rate="48000" channels="6" channel_layout="5.1(side)" bits_per_sample="0" dmix_mode="-1" ltrt_cmixlev="-1.000000" ltrt_surmixlev="-1.000000" loro_cmixlev="-1.000000" loro_surmixlev="-1.000000" r_frame_rate="0/0" avg_frame_rate="0/0" time_base="1/48000" start_pts="-43008" start_time="-0.896000" duration_ts="284160" duration="5.920000" bit_rate="384000" nb_frames="185">
+            <disposition default="1" dub="0" original="0" comment="0" lyrics="0" karaoke="0" forced="0" hearing_impaired="0" visual_impaired="0" clean_effects="0" attached_pic="0"/>
+            <tag key="language" value="eng"/>
+            <tag key="handler_name" value="SoundHandler"/>
+        </stream>
+        <stream index="2" codec_name="ac3" codec_long_name="ATSC A/52A (AC-3)" codec_type="audio" codec_time_base="1/48000" codec_tag_string="ac-3" codec_tag="0x332d6361" sample_fmt="fltp" sample_rate="48000" channels="6" channel_layout="5.1(side)" bits_per_sample="0" dmix_mode="-1" ltrt_cmixlev="-1.000000" ltrt_surmixlev="-1.000000" loro_cmixlev="-1.000000" loro_surmixlev="-1.000000" r_frame_rate="0/0" avg_frame_rate="0/0" time_base="1/48000" start_pts="-43008" start_time="-0.896000" duration_ts="284160" duration="5.920000" bit_rate="384000" nb_frames="185">
+            <disposition default="0" dub="0" original="0" comment="0" lyrics="0" karaoke="0" forced="0" hearing_impaired="0" visual_impaired="0" clean_effects="0" attached_pic="0"/>
+            <tag key="language" value="deu"/>
+            <tag key="handler_name" value="SoundHandler"/>
+        </stream>
+        <stream index="3" codec_name="mov_text" codec_long_name="3GPP Timed Text subtitle" codec_type="subtitle" codec_time_base="1/1000" codec_tag_string="tx3g" codec_tag="0x67337874" r_frame_rate="0/0" avg_frame_rate="0/0" time_base="1/1000" start_pts="-60000" start_time="-60.000000" duration_ts="228480" duration="228.480000" nb_frames="2">
+            <disposition default="1" dub="0" original="0" comment="0" lyrics="0" karaoke="0" forced="0" hearing_impaired="0" visual_impaired="0" clean_effects="0" attached_pic="0"/>
+            <tag key="language" value="eng"/>
+            <tag key="handler_name" value="SubtitleHandler"/>
+        </stream>
+        <stream index="4" codec_name="mov_text" codec_long_name="3GPP Timed Text subtitle" codec_type="subtitle" codec_time_base="1/1000" codec_tag_string="text" codec_tag="0x74786574" r_frame_rate="0/0" avg_frame_rate="0/0" time_base="1/1000" start_pts="-896" start_time="-0.896000" duration_ts="228480" duration="228.480000" bit_rate="38" nb_frames="1">
+            <disposition default="0" dub="0" original="0" comment="0" lyrics="0" karaoke="0" forced="0" hearing_impaired="0" visual_impaired="0" clean_effects="0" attached_pic="0"/>
+            <tag key="language" value="eng"/>
+            <tag key="handler_name" value="SubtitleHandler"/>
+        </stream>
+    </streams>
+
+    <format filename="test4.mp4" nb_streams="5" nb_programs="0" format_name="mov,mp4,m4a,3gp,3g2,mj2" format_long_name="QuickTime / MOV" start_time="-0.896000" duration="228.480000" size="3643034" bit_rate="127557" probe_score="100">
+        <tag key="major_brand" value="isom"/>
+        <tag key="minor_version" value="512"/>
+        <tag key="compatible_brands" value="isomiso2avc1mp41"/>
+        <tag key="encoder" value="Lavf56.25.101"/>
+    </format>
+</ffprobe>
