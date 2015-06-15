@@ -56,6 +56,7 @@ use Ffmpeg;
 
 my $ffmpeg = new Ffmpeg();
 my $errorCount = 0;
+print "Attribute parsing tests...\n";
 my $totalCount = scalar(@TESTS);
 for ($i=0; $i<scalar(@TESTS); $i++) {
 	my $desc = $ffmpeg->parseAttributes($TESTS[$i]);
@@ -68,6 +69,7 @@ for ($i=0; $i<scalar(@TESTS); $i++) {
 
 ######################## ANALYZE TESTS ##########################
 
+print "Analyze tests...\n";
 
 if (-f "test1.mp4") {
 	$totalCount += 5;
@@ -122,6 +124,62 @@ if (-f "test5.mp4") {
 	$errorCount += testCompatibility($ffmpeg, "test5.mp4", 1, 1);
 }
 
+####################### CODEC REPLACEMENT TESTS #################
+print "Codec replacement tests...\n";
+if (-f 'test1.mp4') {
+	$totalCount += 2;
+	$errorCount += testBestFormats($ffmpeg, 'test1.mp4', 'Video: h264 / Audio: unknown (aac)', 'Video: h264 / Audio: unknown (aac)');
+}
+
+if (-f 'test2.mp4') {
+	$totalCount += 2;
+	$errorCount += testBestFormats($ffmpeg, 'test2.mp4', 'Video: mpeg4 (deu) / Audio: deu (aac), eng (aac) / Subtitles: eng (mov_text), eng (mov_text)', 'Video: mpeg4 (deu) / Audio: deu (aac), eng (aac) / Subtitles: eng (mov_text), eng (mov_text)');
+}
+
+if (-f 'test3.mp4') {
+	$totalCount += 2;
+	$errorCount += testBestFormats($ffmpeg, 'test3.mp4', 'Video: mpeg4 (deu) / Audio: deu (aac), eng (aac) / Subtitles: eng (mov_text), eng (mov_text)', 'Video: mpeg4 (deu) / Audio: deu (aac), eng (aac) / Subtitles: eng (mov_text), eng (mov_text)');
+}
+
+if (-f 'test4.mp4') {
+	$totalCount += 2;
+	$errorCount += testBestFormats($ffmpeg, 'test4.mp4', 'Video: h264 / Audio: eng (aac), deu (aac) / Subtitles: eng (mov_text), eng (mov_text)', 'Video: h264 / Audio: eng (ac3), deu (ac3) / Subtitles: eng (mov_text), eng (mov_text)');
+}
+
+if (-f 'test5.mp4') {
+	$totalCount += 2;
+	$errorCount += testBestFormats($ffmpeg, 'test5.mp4', 'Video: h264 / Audio: eng (aac), deu (aac) / Subtitles: eng (mov_text), eng (mov_text)', 'Video: h264 / Audio: eng (aac), deu (aac) / Subtitles: eng (mov_text), eng (mov_text)');
+}
+
+####################### CONVERSION COMPUTATION TESTS #################
+print "Conversion computation tests...\n";
+if (-f 'test1.mp4') {
+	$totalCount += 2;
+	$errorCount += testConversionDescription($ffmpeg, 'test1.mp4', 'video #0:0 copy (und) / audio #0:1 copy (und)', 'video #0:0 copy (und) / audio #0:1 copy (und)');
+}
+
+if (-f 'test2.mp4') {
+	$totalCount += 2;
+	$errorCount += testConversionDescription($ffmpeg, 'test2.mp4', 'video #0:0 copy (deu) / audio #0:1 copy (deu) / audio #0:2 copy (eng) / subtitle #0:4 copy (eng) / subtitle #0:3 copy (eng)', 'video #0:0 copy (deu) / audio #0:1 copy (deu) / audio #0:2 copy (eng) / subtitle #0:4 copy (eng) / subtitle #0:3 copy (eng)');
+}
+
+if (-f 'test3.mp4') {
+	$totalCount += 2;
+	$errorCount += testConversionDescription($ffmpeg, 'test3.mp4', 'video #0:0 copy (deu) / audio #0:1 copy (deu) / audio #0:2 copy (eng) / subtitle #0:4 copy (eng) / subtitle #0:3 copy (eng)', 'video #0:0 copy (deu) / audio #0:1 copy (deu) / audio #0:2 copy (eng) / subtitle #0:4 copy (eng) / subtitle #0:3 copy (eng)');
+}
+
+if (-f 'test4.mp4') {
+	$totalCount += 2;
+	$errorCount += testConversionDescription($ffmpeg, 'test4.mp4', 'video #0:0 copy (und) / audio #0:2 libvo_aacenc (deu) / audio #0:1 libvo_aacenc (eng) / subtitle #0:4 copy (eng) / subtitle #0:3 copy (eng)', 'video #0:0 copy (und) / audio #0:2 copy (deu) / audio #0:1 copy (eng) / subtitle #0:4 copy (eng) / subtitle #0:3 copy (eng)');
+}
+
+if (-f 'test5.mp4') {
+	$totalCount += 2;
+	$errorCount += testConversionDescription($ffmpeg, 'test5.mp4', 'video #0:0 copy (und) / audio #0:2 copy (deu) / audio #0:1 copy (eng) / subtitle #0:4 copy (eng) / subtitle #0:3 copy (eng)', 'video #0:0 copy (und) / audio #0:2 copy (deu) / audio #0:1 copy (eng) / subtitle #0:4 copy (eng) / subtitle #0:3 copy (eng)');
+}
+
+##################### END OF TESTS ##########################
+
 if ($errorCount) {
 	print "$errorCount / $totalCount tests failed\n";
 	exit 1;
@@ -150,5 +208,64 @@ sub testCompatibility {
 	}
 
 	return $errorCount;
+}
+
+sub testBestFormats {
+	my $ffmpeg = shift;
+	my $file   = shift;
+	my $expectedApple = shift;
+	my $expectedEnigma = shift;
+	my $errorCount = 0;
+
+	my $desc = $ffmpeg->analyze($file);
+	my $actual = $ffmpeg->getShortSummary($ffmpeg->applyAppleFormats($desc));
+	if ($actual ne $expectedApple) {
+		print "$file: Apple Best Codec Test failed.\n    Expected: $expectedApple\n    Actual:   $actual\n";
+		$errorCount++;
+	}
+
+	$actual = $ffmpeg->getShortSummary($ffmpeg->applyEnigmaFormats($desc));
+	if ($actual ne $expectedEnigma) {
+		print "$file: Enigma Best Codec Test failed.\n    Expected: $expectedEnigma\n    Actual:   $actual\n";
+		$errorCount++;
+	}
+
+	return $errorCount;
+}
+
+sub testConversionDescription {
+	my $ffmpeg = shift;
+	my $file   = shift;
+	my $expectedApple = shift;
+	my $expectedEnigma = shift;
+	my $errorCount = 0;
+
+	my $desc = $ffmpeg->analyze($file);
+	my $options = { 'defaultAudio' => 'deu' };
+	my $actual = getConversionSummary($ffmpeg->getAppleConversion($desc, $options));
+	if ($actual ne $expectedApple) {
+		print "$file: Apple Conversion Computation Test failed.\n    Expected: $expectedApple\n    Actual:   $actual\n";
+		$errorCount++;
+	}
+
+	$actual = getConversionSummary($ffmpeg->getEnigmaConversion($desc, $options));
+	if ($actual ne $expectedEnigma) {
+		print "$file: Enigma Conversion Computation Test failed.\n    Expected: $expectedEnigma\n    Actual:   $actual\n";
+		$errorCount++;
+	}
+
+	return $errorCount;
+}
+
+sub getConversionSummary {
+	my $conversion = shift;
+	my $rc = '';
+	my $stream;
+
+	foreach $stream (@{$conversion}) {
+		$rc .= ' / '.$stream->{streamType}.' #'.$stream->{streamId}." ".$stream->{codec}.' ('.$stream->{language}.')';
+	}
+	$rc =~ s/^ \/ //;
+	return $rc;
 }
 
